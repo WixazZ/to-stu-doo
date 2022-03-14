@@ -1,7 +1,7 @@
 <template>
   <div id="box">
     <h1>Sign Up</h1>
-    <p>You don’t have an account ? <router-link to="/signup">Sign Up</router-link></p>
+    <p>Create your To Stu'Doo Account</p>
 
     <form @submit.prevent="signIn">
       <div class="form-group">
