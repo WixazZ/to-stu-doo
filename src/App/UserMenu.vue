@@ -13,7 +13,7 @@
           <a href="#" class="nav-links">My Stu'Doo lists</a>
         </li>
         <li>
-          <a href="#" class="nav-links">Log out</a>
+          <a href="#" class="nav-links" v-on:click="logout();">Log out</a>
         </li>
       </ul>
     </nav>
@@ -21,13 +21,22 @@
 </template>
 
 <script>
+import router from "@/rooter";
+
 export default {
   name: "UserMenu",
   components: {},
+  methods: {
+    logout() {
+      sessionStorage.removeItem('token');
+      if (!sessionStorage.getItem('token')) {
+        router.push("/signin");
+      }
+    }
+  },
   mounted() {
     let mainNav = document.getElementById("js-menu");
     let navBarToggle = document.getElementById("js-navbar-toggle");
-
     navBarToggle.addEventListener("click", function() {
       mainNav.classList.toggle("active");
     });

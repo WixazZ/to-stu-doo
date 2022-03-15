@@ -24,8 +24,7 @@ export default {
 
 <style>
 body {
-  overflow-y: hidden;
   height: 100vh;
-  background: rgba(74, 21, 193, 1) linear-gradient(180deg, rgba(74, 21, 193, 1) 0%, rgba(54, 112, 212, 1) 100%) no-repeat;
+  background: rgba(54, 112, 212, 1) linear-gradient(180deg, rgba(74, 21, 193, 1) 0%, rgba(54, 112, 212, 1) 100%) no-repeat;
 }
 </style>

@@ -3,25 +3,22 @@
     <h1>Sign Up</h1>
     <p>Already have an account ? <router-link to="/signin">Sign In</router-link></p>
 
-    <form @submit.prevent="signIn">
+    <form v-on:submit="signUp()">
       <div class="form-group">
         <input type="email" class="form-control" id="email" v-model="email" placeholder="Email" required>
-      </div>
-      <div class="form-group">
         <input type="text" class="form-control" id="username" v-model="username" placeholder="Username" required>
-      </div>
-      <div class="form-group">
         <input type="password" class="form-control" id="password" v-model="password" placeholder="Password" required>
+        <input type="password" class="form-control" id="confirmPassword" v-model="password" placeholder="Confirm your password" required>
       </div>
-      <div class="form-group">
-        <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" placeholder="Confirm your password" required>
-      </div>
-      <button v-on:click="signUp();" type="submit" class="btn btn-primary">Sign In</button>
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+
     </form>
   </div>
 </template>
 
 <script>
+import router from "@/rooter";
+
 export default {
 
   name: "SignUp",
@@ -36,7 +33,7 @@ export default {
       return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(document.getElementById("email").value)
     },
     confirmPassword(){
-      return document.getElementById("confirmPassword").value().equals(document.getElementById("confirmPassword").value());
+      return document.getElementById("password").value === document.getElementById("confirmPassword").value;
     },
     checkInputs(){
       if(!this.checkEmail()){
@@ -54,19 +51,37 @@ export default {
       }
       return true;
     },
-    signUp(){
-      if(this.checkInputs()){
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({username:document.getElementById("username").value, password:document.getElementById("password").value, mail: document.getElementById("email").value})
-        };
-        fetch("http://localhost:8080/signup", requestOptions).then(response => response.json()).then((data) => {
-          if(data.token){
-            sessionStorage.setItem('token', data.token);
-          }
-        });
-      }
+      signUp() {
+        event.preventDefault();
+        let test = {
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value,
+          mail: document.getElementById("email").value
+        }
+        console.log(test);
+        if (this.checkInputs()) {
+          const requestOptions = {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            json: true,
+            body: JSON.stringify(test),
+          };
+
+          fetch("http://localhost:3000/signup", requestOptions).then(response => response.json()).then((data) => {
+            if (data.token) {
+              sessionStorage.setItem('token', data.token);
+              router.push("/usermenu");
+            }
+          });
+        }
+    }
+  },
+  beforeMount() {
+    if (sessionStorage.getItem('token')) {
+      router.push("/usermenu");
     }
   }
 }
@@ -89,7 +104,7 @@ template{
   margin-right: auto;
   margin-top: 18vh;
   width: 500px;
-  height: 67vh;
+  height: 600px;
   background-color: #fff;
   border-radius: 40px;
   text-align: center;
@@ -111,7 +126,7 @@ form {
 
 input {
   width: 70%;
-  margin: 3vh auto;
+  margin: 20px auto;
   padding: 10px;
   border: 1px solid #ccc;
   background-color: #C4C4C4;
@@ -132,7 +147,7 @@ input:not(:placeholder-shown){
 
 .btn{
   width: 20%;
-  margin: 5% auto;
+  margin: 30px auto;
   padding: 10px;
   border-radius: 10px;
 
