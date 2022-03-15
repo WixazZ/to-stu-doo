@@ -18,6 +18,35 @@
       </ul>
     </nav>
   </div>
+  <div class="container">
+    <div class="data">
+      <div class="item"></div>
+      <h2 class="subtitle">text</h2>
+    </div>
+    <div class="data">
+      <div class="item"></div>
+      <h2 class="subtitle">text</h2>
+    </div>
+    <div class="data">
+      <div class="item"></div>
+      <h2 class="subtitle">text</h2>
+    </div>
+    <div class="data">
+      <div class="item"></div>
+      <h2 class="subtitle">text</h2>
+    </div>
+    <div class="data">
+      <div class="item"></div>
+      <h2 class="subtitle">text</h2>
+    </div>
+    <div class="data">
+      <div class="item"></div>
+      <h2 class="subtitle">text</h2>
+    </div>
+    <div class="item addCat" onclick="">
+      <img class="imgplus" src="../assets/plus.png" alt="plus">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -94,6 +123,49 @@ export default {
 
 .active {
   display: block;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, auto);
+  justify-items: center;
+  grid-gap: 50px;
+  height: 100%;
+  width: 100vw;
+  margin-top: 50px;
+
+}
+
+.item{
+  border: 1px solid ;
+  background-color: #fff;
+  height: 300px;
+  width : 200px;
+  border-radius: 50px;
+  box-shadow: -10px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+}
+
+.addCat{
+  opacity: 0.5;
+  text-align: center;
+
+}
+.data{
+  text-align: center;
+
+}
+.imgplus{
+  margin-top: 50%;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+.subtitle{
+  font-family: popins-regular, sans-serif;
+  font-size: 30px;
 }
 
 @media screen and (min-width: 768px) {
