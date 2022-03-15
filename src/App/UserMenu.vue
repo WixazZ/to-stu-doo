@@ -147,13 +147,16 @@ export default {
 }
 
 .item{
-  border: 1px solid ;
   background-color: #fff;
   height: 300px;
   width : 200px;
   border-radius: 50px;
-  box-shadow: -10px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: rgba(50, 50, 93, 0.25) 0 13px 27px -5px, rgba(0, 0, 0, 0.3) 0 8px 16px -8px;
   margin-bottom: 10px;
+}
+
+.item:hover{
+  box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset;
 }
 
 .addCat{
