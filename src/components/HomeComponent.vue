@@ -8,8 +8,17 @@
 </template>
 
 <script>
+import router from "@/rooter";
+
 export default {
-  name: "HomeComponent"
+  name: "HomeComponent",
+  mounted() {
+    if(!sessionStorage.getItem('token')){
+      router.push("/signup");
+    } else {
+      router.push("/usermenu");
+    }
+  }
 }
 </script>
 
