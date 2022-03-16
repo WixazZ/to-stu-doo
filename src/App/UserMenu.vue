@@ -2,7 +2,7 @@
   <div id="box">
     <nav class="navbar">
         <span class="navbar-toggle" id="js-navbar-toggle">
-            <i class="fas fa-bars">Test</i>
+            <img src="../assets/icons/bars-solid.svg" min-height="20px" min-width="20px"/>
         </span>
       <a href="#" class="logo">logo</a>
       <ul class="main-nav" id="js-menu">
@@ -19,31 +19,15 @@
     </nav>
   </div>
   <div class="container">
-    <div class="data">
-      <div class="item"></div>
-      <h2 class="subtitle">text</h2>
+    <div v-for="(item, index) in items" v-bind:key="item.id" class="data">
+      <div class="item">
+        <div class="category" v-on:click="openStudooList()">
+          <h2 class="subtitle">{{ item.category }}</h2>
+        </div>
+        <img class="fa-trash" src="../assets/icons/trash-solid.svg" v-on:click="removeStudooList(index)"/>
+      </div>
     </div>
-    <div class="data">
-      <div class="item"></div>
-      <h2 class="subtitle">text</h2>
-    </div>
-    <div class="data">
-      <div class="item"></div>
-      <h2 class="subtitle">text</h2>
-    </div>
-    <div class="data">
-      <div class="item"></div>
-      <h2 class="subtitle">text</h2>
-    </div>
-    <div class="data">
-      <div class="item"></div>
-      <h2 class="subtitle">text</h2>
-    </div>
-    <div class="data">
-      <div class="item"></div>
-      <h2 class="subtitle">text</h2>
-    </div>
-    <div class="item addCat" onclick="">
+    <div class="item addCat" v-on:click="addStudooList()">
       <img class="imgplus" src="../assets/plus.png" alt="plus">
     </div>
   </div>
@@ -54,13 +38,31 @@ import router from "@/rooter";
 
 export default {
   name: "UserMenu",
-  components: {},
+  data() {
+    return{
+      items: [
+      ]
+    }
+  },
   methods: {
     logout() {
       sessionStorage.removeItem('token');
       if (!sessionStorage.getItem('token')) {
         router.push("/signin");
       }
+    },
+    addStudooList(){
+      let name = prompt("Choose a name for this Stu'doo List !");
+      if(name.length <= 15 && name.match(/^[A-Za-z][A-Za-z0-9_]{3,15}$/)){
+        this.items.push({
+          category: name
+        });
+      } else {
+        alert("Invalid name !");
+      }
+    },
+    removeStudooList(index){
+      this.items.splice(index,1);
     }
   },
   mounted() {
@@ -126,11 +128,12 @@ export default {
   top: 10px;
   right: 20px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
   font-size: 24px;
+  height: 20px;
+  width: 20px;
 }
 
-.active {
+.active{
   display: block;
 }
 
@@ -146,7 +149,25 @@ export default {
 
 }
 
+.item .fa-trash{
+  cursor: pointer;
+  font-size: 24px;
+  height: 20px;
+  width: 20px;
+}
+
+.fa-trash:hover{
+  filter: brightness(0) saturate(100%) invert(8%) sepia(94%) saturate(5909%) hue-rotate(12deg) brightness(87%) contrast(114%);
+}
+
+.item .category h2{
+  margin: auto;
+  padding-top: 120px;
+  padding-bottom: 85px;
+}
+
 .item{
+  margin-top: 0;
   background-color: #fff;
   height: 300px;
   width : 200px;
