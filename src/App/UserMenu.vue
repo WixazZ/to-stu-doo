@@ -53,7 +53,7 @@ export default {
     },
     addStudooList(){
       let name = prompt("Choose a name for this Stu'doo List !");
-      if(name.length <= 15 && name.match(/^[A-Za-z][A-Za-z0-9_]{3,15}$/)){
+      if(name.length <= 15 && name.match(/^[A-Za-z][A-Za-z0-9_]{3,12}$/)){
         this.items.push({
           category: name
         });
@@ -91,9 +91,9 @@ export default {
 }
 
 .navbar {
-  min-width: 100vw;
-  margin-top: -0.5em;
-  margin-left: -0.5em;
+  margin-top: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
   font-size: 18px;
   background-color: darkorchid;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -144,10 +144,30 @@ export default {
   justify-items: center;
   grid-gap: 50px;
   height: 100%;
-  width: 100vw;
+  width: 100%;
   margin-top: 50px;
-
 }
+@media screen and (max-width: 1256px) {
+  .container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media screen and (max-width: 1080px) {
+  .container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (max-width: 780px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (max-width: 480px) {
+  .container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
 
 .item .fa-trash{
   cursor: pointer;
@@ -202,18 +222,19 @@ export default {
 }
 
 @media screen and (min-width: 768px) {
+
+
   .navbar {
     display: flex;
     justify-content: space-between;
     padding-bottom: 0;
     height: 70px;
     align-items: center;
-
   }
 
   .main-nav {
     display: flex;
-    margin-right: 30px;
+    margin-right: 10px;
     flex-direction: row;
     justify-content: flex-end;
   }

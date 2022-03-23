@@ -60,9 +60,6 @@ export default {
   font-family: 'popins-regular';
   src: url('../assets/fonts/Poppins/Poppins-Regular.ttf');
 }
-template{
-
-}
 
 #box {
   left: 0;
