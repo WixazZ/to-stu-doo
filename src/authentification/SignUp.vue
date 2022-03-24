@@ -27,7 +27,7 @@ export default {
       return /^[a-zA-Z0-9]{3,20}$/.test(document.getElementById("username").value);
     },
     checkPassword(){
-      return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.:/(){}@$!%*?&])[A-Za-z\d.:/(){}@$!%*?&]{8,50}$/.test(document.getElementById("password").value);
+      return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,50}$/.test(document.getElementById("password").value);
     },
     checkEmail(){
       return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(document.getElementById("email").value)
@@ -43,7 +43,7 @@ export default {
         alert("Username length should be from 3 to 20 and contains letters and numbers only");
         return false
       }else if(!this.checkPassword()){
-        alert("Invalid Password");
+        alert("Minimum eight characters, at least one letter and one number");
         return false
       }else if(!this.confirmPassword()){
         alert("Password confirmation different from password");
@@ -73,7 +73,7 @@ export default {
           fetch("http://localhost:3000/signup", requestOptions).then(response => response.json()).then((data) => {
             if (data.token) {
               sessionStorage.setItem('token', data.token);
-              router.push("/usermenu");
+              router.push("/studoolist");
             }
           });
         }
@@ -81,7 +81,7 @@ export default {
   },
   beforeMount() {
     if (sessionStorage.getItem('token')) {
-      router.push("/usermenu");
+      router.push("/studoolist");
     }
   }
 }

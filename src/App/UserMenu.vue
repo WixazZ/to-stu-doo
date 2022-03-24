@@ -174,6 +174,9 @@ export default {
   src: url('../assets/fonts/Poppins/Poppins-Regular.ttf');
 }
 
+.item{
+  cursor: pointer;
+}
 #box {
   box-sizing: border-box;
   padding: 0;

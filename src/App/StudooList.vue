@@ -9,8 +9,8 @@
         <li>
           <a href="#" class="nav-links">Home</a>
         </li>
-        <li>
-          <router-link  to="/studoolist">My Stu'Doo lists</router-link>
+        <li class="routernav">
+          <router-link class="nav-links" to="/studoolist">My Stu'Doo lists</router-link>
         </li>
         <li>
           <a href="#" class="nav-links" v-on:click="logout();">Log out</a>
@@ -40,6 +40,9 @@
                   <option value="doing">doing</option>
                   <option value="done">done</option>
                 </select>
+              </div>
+              <div class="insideItem">
+                <img class="fa-trash" src="../assets/icons/trash-solid.svg" v-on:click="removeStudooList(index,item.category)"/>
               </div>
             </div>
           </div>
@@ -72,6 +75,9 @@
                   <option value="done">done</option>
                 </select>
               </div>
+              <div class="insideItem">
+                <img class="fa-trash" src="../assets/icons/trash-solid.svg" v-on:click="removeStudooList(index,item.category)"/>
+              </div>
             </div>
           </div>
         </div>
@@ -98,6 +104,9 @@
                   <option value="doing">doing</option>
                   <option value="done">done</option>
                 </select>
+              </div>
+              <div class="insideItem">
+                <img class="fa-trash" src="../assets/icons/trash-solid.svg" v-on:click="removeStudooList(index,item.category)"/>
               </div>
             </div>
           </div>
@@ -167,7 +176,6 @@ export default {
 
     },
     addTask(){
-      console.log("dfsfsd")
       let name = prompt("Enter your task Name :");
 
       let content = prompt("Enter your task content :");
@@ -183,8 +191,7 @@ export default {
         }
       }
 
-      console.log("dfsfsd")
-      if(bool && name.length <= 15 && name.match(/^[A-Za-z][A-Za-z0-9_]{3,12}$/) && content.match(/^[A-Za-z][A-Za-z0-9_]{10,40}$/)){
+      if(bool && (name.length <= 15 && name.length > 3) && (content.length <= 50 && content.length >= 5)){
 
         let test = {
           token: sessionStorage.getItem('token'),
@@ -240,7 +247,7 @@ export default {
       };
 
       console.log(name);
-      fetch("http://localhost:3000/studoolist/"+name, requestOptions).then(response => response.json()).then((data) => {
+      fetch("http://localhost:3000/task/delete", requestOptions).then(response => response.json()).then((data) => {
         if (data.error) {
           console.log(data.error);
         }
@@ -311,9 +318,9 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  cursor: pointer;
 }
-.insideItem{
-}
+
 
 @font-face {
   font-family: 'popins-regular';
@@ -471,5 +478,15 @@ export default {
   .nav-links:hover {
     color: rgba(255, 255, 255, 1);
   }
+}
+.item .fa-trash{
+  cursor: pointer;
+  font-size: 24px;
+  height: 20px;
+  width: 20px;
+}
+
+.fa-trash:hover{
+  filter: brightness(0) saturate(100%) invert(8%) sepia(94%) saturate(5909%) hue-rotate(12deg) brightness(87%) contrast(114%);
 }
 </style>
