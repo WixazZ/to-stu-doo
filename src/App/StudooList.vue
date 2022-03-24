@@ -2,7 +2,7 @@
   <div id="box">
     <nav class="navbar">
         <span class="navbar-toggle" id="js-navbar-toggle">
-            <img src="../assets/icons/bars-solid.svg" min-height="20px" min-width="20px"/>
+            <img src="../assets/icons/bars-solid.svg" min-height="20px" min-width="20px" alt="bar"/>
         </span>
       <a href="#" class="logo">logo</a>
       <ul class="main-nav" id="js-menu">
@@ -10,7 +10,7 @@
           <a href="#" class="nav-links">Home</a>
         </li>
         <li>
-          <a href="#" class="nav-links">My Stu'Doo lists</a>
+          <router-link  to="/studoolist">My Stu'Doo lists</router-link>
         </li>
         <li>
           <a href="#" class="nav-links" v-on:click="logout();">Log out</a>
@@ -18,33 +18,95 @@
       </ul>
     </nav>
   </div>
-  <div class="container todo">
-    <div v-for="(item) in items" v-bind:key="item.id" class="data">
-      <div v-if="item.state === 'todo'">
-        <div class="item">
+  <div class="global">
+    <div class="state todo_class">
+      <h1>Todo</h1>
+      <div class="container todo">
+        <div v-for="(item) in items" v-bind:key="item.id" class="data">
+          <div v-if="item.status === 0">
+            <div class="item itemComponent">
+              <div class="insideItem">
+                {{item.name}}
+              </div>
+              <div class="insideItem">
+                {{item.content}}
+              </div>
+              <div class="insideItem">
+                <label for="tasktodo">Select task's status:</label>
+                <br/>
+                <select name="status" id="tasktodo" @change="switchSelect($event, item)">
+                  <option value="default"></option>
+                  <option value="todo">todo</option>
+                  <option value="doing">doing</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item addCat" v-on:click="addTask()">
+          <img class="imgplus" src="../assets/plus.png" alt="plus">
         </div>
       </div>
     </div>
-    <div class="item addCat" v-on:click="addTask()">
-      <img class="imgplus" src="../assets/plus.png" alt="plus">
-    </div>
-  </div>
-  <div class="container doing">
-    <div v-for="(item) in items" v-bind:key="item.id" class="data">
-      <div v-if="item.state === 'doing'">
-        <div class="item">
+
+    <div class="state doing_class">
+      <h1>Doing</h1>
+      <div class="container doing">
+        <div v-for="(item) in items" v-bind:key="item.id" class="data">
+          <div v-if="item.status === 1">
+            <div class="item itemComponent">
+              <div class="insideItem">
+                {{item.name}}
+              </div>
+              <div class="insideItem">
+                {{item.content}}
+              </div>
+              <div class="insideItem">
+                <label for="doing">Select task's status:</label>
+                <br/>
+                <select name="status" id="doing" @change="switchSelect($event, item)">
+                  <option value="default"></option>
+                  <option value="todo">todo</option>
+                  <option value="doing">doing</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="container done">
-    <div v-for="(item) in items" v-bind:key="item.id" class="data">
-      <div v-if="item.state === 'done'">
-        <div class="item">
+    <div class="state done_class">
+      <h1>Done</h1>
+      <div class="container done">
+        <div v-for="(item) in items" v-bind:key="item.id" class="data">
+          <div v-if="item.status === 2">
+            <div class="item itemComponent">
+              <div class="insideItem">
+                {{item.name}}
+              </div>
+              <div class="insideItem">
+                {{item.content}}
+              </div>
+              <div class="insideItem">
+                <label for="done">Select task's status:</label>
+                <br/>
+                <select name="status" id="done" @change="switchSelect($event, item)">
+                  <option value="default"></option>
+                  <option value="todo">todo</option>
+                  <option value="doing">doing</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
+
 </template>
 
 <script>
@@ -65,10 +127,124 @@ export default {
         router.push("/signin");
       }
     },
-    addTask(){
+    switchSelect(event, item) {
+
+      switch (event.target.value){
+        case "todo":
+          item.status = 0;
+          break;
+        case "doing":
+          item.status = 1;
+          break;
+        case "done":
+          item.status = 2;
+          break;
+      }
+
+      let test = {
+        token: sessionStorage.getItem('token'),
+        id: item.id,
+        status: item.status,
+      }
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        json: true,
+        body: JSON.stringify(test),
+      };
+      console.log(name);
+      fetch("http://localhost:3000/task/update", requestOptions).then(response => response.json()).then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        }
+      });
+
+
+
     },
-    removeTask(index){
+    addTask(){
+      console.log("dfsfsd")
+      let name = prompt("Enter your task Name :");
+
+      let content = prompt("Enter your task content :");
+
+      let bool = true;
+      if (this.items.length === 0){
+        for(let i = 0; i < this.items.length; i++){
+          if(this.items[i].category === name){
+            alert("This name is already used !");
+            bool = false;
+            return;
+          }
+        }
+      }
+
+      console.log("dfsfsd")
+      if(bool && name.length <= 15 && name.match(/^[A-Za-z][A-Za-z0-9_]{3,12}$/) && content.match(/^[A-Za-z][A-Za-z0-9_]{10,40}$/)){
+
+        let test = {
+          token: sessionStorage.getItem('token'),
+          name: sessionStorage.getItem('studoolist'),
+          nameTask: name,
+          contentTask: content
+        }
+
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          json: true,
+          body: JSON.stringify(test),
+        };
+        console.log(name);
+        fetch("http://localhost:3000/task/send", requestOptions).then(response => response.json()).then((data) => {
+          if (data.error) {
+            console.log(data.error);
+          }
+          this.items.push({
+            id: data.id,
+            name: name,
+            content: content,
+            status: 0,
+            category: name
+          });
+        });
+
+
+      } else {
+        alert("Invalid name !");
+      }
+    },
+    removeStudooList(index, name){
       this.items.splice(index,1);
+
+      let test = {
+        token: sessionStorage.getItem('token'),
+        delete: true,
+      }
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        json: true,
+        body: JSON.stringify(test),
+      };
+
+      console.log(name);
+      fetch("http://localhost:3000/studoolist/"+name, requestOptions).then(response => response.json()).then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        }
+      });
     }
   },
   mounted() {
@@ -77,6 +253,41 @@ export default {
     navBarToggle.addEventListener("click", function() {
       mainNav.classList.toggle("active");
     });
+
+    let test = {
+      token: sessionStorage.getItem('token'),
+      name: sessionStorage.getItem('studoolist')
+    }
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      json: true,
+      body: JSON.stringify(test),
+    };
+    console.log(name);
+    fetch("http://localhost:3000/task", requestOptions).then(response => response.json()).then((data) => {
+      if (data.error) {
+        console.log(data.error);
+      }else {
+        for (let i = 0; i < data.tasks.length; i++) {
+          this.items.push({
+            id: data.tasks[i].id,
+            name: data.tasks[i].name,
+            content: data.tasks[i].content,
+            status: data.tasks[i].status,
+          });
+        }
+      }
+    });
+  },
+  beforeMount() {
+    if (!sessionStorage.getItem('token')) {
+      router.push("/signin");
+    }
   }
 
 }
@@ -84,6 +295,25 @@ export default {
 </script>
 
 <style scoped>
+
+.global{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.state{
+  align-items: center;
+}
+
+
+.itemComponent{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.insideItem{
+}
 
 @font-face {
   font-family: 'popins-regular';
@@ -144,34 +374,10 @@ export default {
 }
 
 .container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, auto);
   justify-items: center;
-  grid-gap: 50px;
   height: 100%;
   width: 100%;
   margin-top: 50px;
-}
-@media screen and (max-width: 1256px) {
-  .container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-@media screen and (max-width: 1080px) {
-  .container {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media screen and (max-width: 780px) {
-  .container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media screen and (max-width: 480px) {
-  .container {
-    grid-template-columns: repeat(1, 1fr);
-  }
 }
 
 

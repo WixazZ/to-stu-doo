@@ -21,10 +21,10 @@
   <div class="container">
     <div v-for="(item, index) in items" v-bind:key="item.id" class="data">
       <div class="item">
-        <div class="category" v-on:click="openStudooList()">
+        <div class="category" v-on:click="openStudooList(item.category)">
           <h2 class="subtitle">{{ item.category }}</h2>
         </div>
-        <img class="fa-trash" src="../assets/icons/trash-solid.svg" v-on:click="removeStudooList(index)"/>
+        <img class="fa-trash" src="../assets/icons/trash-solid.svg" v-on:click="removeStudooList(index,item.category)"/>
       </div>
     </div>
     <div class="item addCat" v-on:click="addStudooList()">
@@ -51,18 +51,75 @@ export default {
         router.push("/signin");
       }
     },
+    openStudooList(item) {
+      sessionStorage.setItem('studoolist', item);
+      router.push("/studoolist/"+item);
+    },
     addStudooList(){
       let name = prompt("Choose a name for this Stu'doo List !");
-      if(name.length <= 15 && name.match(/^[A-Za-z][A-Za-z0-9_]{3,12}$/)){
-        this.items.push({
-          category: name
+      let bool = true;
+      for(let i = 0; i < this.items.length; i++){
+        if(this.items[i].category === name){
+          alert("This name is already used !");
+          bool = false;
+          return;
+        }
+      }
+
+      if(bool && name.match(/^[A-Za-z][A-Za-z0-9_]{3,12}$/)){
+
+        let test = {
+          token: sessionStorage.getItem('token'),
+        }
+
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          json: true,
+          body: JSON.stringify(test),
+        };
+        console.log(name);
+        fetch("http://localhost:3000/studoolist/"+name+"", requestOptions).then(response => response.json()).then((data) => {
+          if (data.error) {
+            console.log(data.error);
+          } else {
+            this.items.push({
+              category: name
+            });
+          }
         });
+
+
       } else {
         alert("Invalid name !");
       }
     },
-    removeStudooList(index){
+    removeStudooList(index, name){
       this.items.splice(index,1);
+
+      let test = {
+        token: sessionStorage.getItem('token'),
+        delete: true,
+      }
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        json: true,
+        body: JSON.stringify(test),
+      };
+      console.log(name);
+      fetch("http://localhost:3000/studoolist/"+name, requestOptions).then(response => response.json()).then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        }
+        console.log(data)
+      });
     }
   },
   mounted() {
@@ -71,6 +128,39 @@ export default {
     navBarToggle.addEventListener("click", function() {
       mainNav.classList.toggle("active");
     });
+
+    let test = {
+      token: sessionStorage.getItem('token'),
+    }
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      json: true,
+      body: JSON.stringify(test),
+    };
+    console.log(name);
+    fetch("http://localhost:3000/studoolist", requestOptions).then(response => response.json()).then((data) => {
+      if (data.error) {
+        console.log(data.error);
+      }else {
+        for (let i = 0; i < data.studoolist.length; i++) {
+          this.items.push({
+            category: data.studoolist[i].name
+          });
+        }
+      }
+    });
+  },
+  beforeMount() {
+    if (sessionStorage.getItem('token')) {
+      router.push("/studoolist");
+    } else {
+      router.push("/signin");
+    }
   }
 
 }

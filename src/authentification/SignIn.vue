@@ -28,7 +28,6 @@ export default {
         username: document.getElementById("username").value,
         password: document.getElementById("password").value,
       }
-      console.log(test);
       const requestOptions = {
         method: "POST",
         headers: {
@@ -41,14 +40,14 @@ export default {
       fetch("http://localhost:3000/signin", requestOptions).then(response => response.json()).then((data) => {
         if (data.token) {
           sessionStorage.setItem('token', data.token);
-          router.push("/usermenu");
+          router.push("/studoolist");
         }
         });
       }
   },
   beforeMount() {
     if (sessionStorage.getItem('token')) {
-      router.push("/usermenu");
+      router.push("/studoolist");
     }
   }
 }
